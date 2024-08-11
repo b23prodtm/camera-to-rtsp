@@ -48,7 +48,7 @@ Attach the `rtsp-simple-server.yml` and run the docker command.
     -d --restart=always \
     kerberos/rtsp-simple-server:latest-rpi
 
-The stream will be exposed on `rtsp://localhost:8554/rpicam`.
+The stream will be exposed on `rtsp://localhost:8554/rpicam`,  (1)
 
 ### USB camera
 
@@ -61,6 +61,9 @@ In the case of webcam, ffmpeg will be used to encode the camera to a h264 stream
             runOnInit: ffmpeg -f v4l2 -i /dev/video0 -preset ultrafast -c:v libx264 -x264-params keyint=60:scenecut=0 -f rtsp rtsp://<my_ip>:$RTSP_PORT/$RTSP_PATH
             runOnInitRestart: yes
 
+
+> Please note that above command will encode the stream to h264 (without HW accel), so if you want to a more performant system, you might need to look into adding hwaccel to the container.
+
 Run the container with the configuration as following.
 
     docker run --network=host \
@@ -68,6 +71,7 @@ Run the container with the configuration as following.
     -d --privileged --restart-always \
     kerberos/rtsp-simple-server:latest
 
-The stream will be exposed on `rtsp://localhost:8554/usbcam`.
+The stream will be exposed on `rtsp://localhost:8554/usbcam`. (1)
 
-> Please note that above command will encode the stream to h264 (without HW accel), so if you want to a more performant system, you might need to look into adding hwaccel to the container.
+> (1) i.e. rtsp://ea...a58cb5.balena-devices.com:8554/usbcam as of MTX_WEBRTCADDITIONALHOSTS=ea...a58cb5.balena-devices.com whilst the Kerneros Agent Camera Settings RTSP URL sets up with the same URL for this hostname.
+
